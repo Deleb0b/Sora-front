@@ -186,3 +186,54 @@ main:focus:not(:focus-visible) {
   flex-direction: column;
   gap: var(--sora-space-md, 12px);
 }
+
+/* ---------- Mi red ---------- */
+
+.section-title {
+  margin: 0 0 var(--sora-space-md, 12px);
+}
+
+.section-title__count {
+  color: var(--sora-color-text-secondary, #6b6475);
+  font-weight: 400;
+}
+
+.hint {
+  margin: 0;
+  color: var(--sora-color-text-secondary, #6b6475);
+}
+
+/* Áreas de toque de al menos 44 × 44 px (el botón small de la biblioteca mide 36 px). */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.contact-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sora-space-sm, 8px);
+  transition: opacity 0.2s ease;
+}
+
+/* Guardando: se atenúa y además lleva texto "Guardando…" (no depende solo del color). */
+.contact-item[data-saving] {
+  opacity: 0.7;
+}
+
+.contact-item__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sora-space-sm, 8px);
+  flex-wrap: wrap;
+}
+
+.contact-item__status {
+  font-size: 0.875rem;
+  color: var(--sora-color-text-secondary, #6b6475);
+}
+
+.contact-item__delete {
+  margin-left: auto;
+  padding-inline: var(--sora-space-md, 12px);
+}
