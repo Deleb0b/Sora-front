@@ -1,4 +1,5 @@
 import { QueryClientProvider } from '@tanstack/react-query';
+import { MotionConfig } from 'motion/react';
 import { lazy, Suspense, type ReactNode } from 'react';
 import { LiveAnnouncerProvider } from '../a11y';
 import { ToastProvider } from '../components/feedback';
@@ -12,9 +13,13 @@ const ReactQueryDevtools = import.meta.env.DEV
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <LiveAnnouncerProvider>
-        <ToastProvider>{children}</ToastProvider>
-      </LiveAnnouncerProvider>
+      {/* reducedMotion="user": si el sistema pide reducir movimiento, Motion desactiva las
+          animaciones de posición y transformación en toda la app y conserva solo la opacidad. */}
+      <MotionConfig reducedMotion="user">
+        <LiveAnnouncerProvider>
+          <ToastProvider>{children}</ToastProvider>
+        </LiveAnnouncerProvider>
+      </MotionConfig>
       <Suspense fallback={null}>
         <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-right" />
       </Suspense>
