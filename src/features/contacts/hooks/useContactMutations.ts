@@ -71,12 +71,10 @@ export function useCreateContact() {
       return { ...snapshot, tempId };
     },
 
-    onError: (error, _input, snapshot) => {
+    onError: (_error, _input, snapshot) => {
       restore(queryClient, snapshot);
-      // Los errores por campo (p. ej. teléfono repetido) los muestra el formulario con setError.
-      if (!(error instanceof ApiError && error.fieldErrors)) {
-        toast.error('No se pudo agregar el contacto', getErrorMessage(error));
-      }
+      // Sin toast: la creación siempre nace del formulario, que muestra el error junto a los
+      // campos (setError) o arriba del botón de guardar. Un toast quedaría detrás del Modal.
     },
 
     onSuccess: (created, _input, snapshot) => {
@@ -100,7 +98,12 @@ export interface UpdateContactVariables {
   patch: ContactPatch;
 }
 
-export function useUpdateContact() {
+interface UpdateOptions {
+  /** false cuando la mutación nace de un formulario que ya muestra sus propios errores. */
+  notifyOnError?: boolean;
+}
+
+export function useUpdateContact({ notifyOnError = true }: UpdateOptions = {}) {
   const queryClient = useQueryClient();
   const toast = useToast();
 
@@ -123,7 +126,7 @@ export function useUpdateContact() {
 
     onError: (error, variables, snapshot) => {
       restore(queryClient, snapshot);
-      if (error instanceof ApiError && error.fieldErrors) return;
+      if (!notifyOnError || (error instanceof ApiError && error.fieldErrors)) return;
       toast.error(`No se pudo actualizar a ${variables.contact.name}`, getErrorMessage(error), {
         label: 'Reintentar',
         onClick: () => mutation.mutate(variables),

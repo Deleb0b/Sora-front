@@ -1,6 +1,7 @@
 import { Badge, Button, ContactCard } from '@sora-app/ui';
+import { motion, useIsPresent } from 'motion/react';
 import { memo } from 'react';
-import { StarIcon, TrashIcon } from '../../../components/icons';
+import { PencilIcon, StarIcon, TrashIcon } from '../../../components/icons';
 import { relationLabels } from '../../../schemas/contact.schema';
 import type { Contact } from '../../../types';
 import { formatPhone } from '../../../utils/format';
@@ -12,6 +13,7 @@ interface ContactItemProps {
   pending: boolean;
   onMakePrimary: (contact: Contact) => void;
   onRequestDelete: (contact: Contact) => void;
+  onEdit: (contact: Contact) => void;
 }
 
 const call = (phone: string) => window.location.assign(`tel:${phone}`);
@@ -26,13 +28,28 @@ const message = (phone: string) => window.location.assign(`sms:${phone}`);
  * la lista pasa handlers estables (useCallback) y TanStack Query conserva la referencia
  * de los contactos que no cambiaron (structural sharing).
  */
-export const ContactItem = memo(function ContactItem({ contact, pending, onMakePrimary, onRequestDelete }: ContactItemProps) {
+export const ContactItem = memo(function ContactItem({ contact, pending, onMakePrimary, onRequestDelete, onEdit }: ContactItemProps) {
   const saving = pending || isOptimisticContact(contact);
+  // Mientras se anima la salida el elemento sigue en el DOM: `inert` lo saca del orden de
+  // tabulación y del árbol de accesibilidad para que nadie interactúe con un contacto ya eliminado.
+  const isPresent = useIsPresent();
   const relation = `${relationLabels[contact.relation]} · ${formatPhone(contact.phone)}`;
 
   return (
     // aria-busy comunica a los lectores de pantalla que el contacto se está guardando.
-    <li className="contact-item" aria-busy={saving || undefined} data-saving={saving || undefined}>
+    // motion.li: entra deslizándose, sale hacia la izquierda y `layout` anima el reordenamiento
+    // (p. ej. al marcar a alguien como principal sube al inicio). Solo se animan transform y
+    // opacity, así que el indicador de foco (outline) no se altera.
+    <motion.li
+      layout="position"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: saving ? 0.7 : 1, y: 0 }}
+      exit={{ opacity: 0, x: -32, transition: { duration: 0.2 } }}
+      transition={{ type: 'spring', stiffness: 420, damping: 34 }}
+      className="contact-item"
+      aria-busy={saving || undefined}
+      inert={!isPresent || undefined}
+    >
       <ContactCard
         name={contact.name}
         relation={relation}
@@ -69,7 +86,16 @@ export const ContactItem = memo(function ContactItem({ contact, pending, onMakeP
           </span>
         )}
 
-        {/* Botón de solo ícono: nombre accesible en aria-label; el SVG ya es aria-hidden. */}
+        {/* Botones de solo ícono: nombre accesible en aria-label; el SVG ya es aria-hidden. */}
+        <Button
+          variant="tonal"
+          size="small"
+          className="touch-target contact-item__edit"
+          icon={<PencilIcon size={20} />}
+          disabled={saving}
+          onClick={() => onEdit(contact)}
+          aria-label={`Editar a ${contact.name}`}
+        />
         <Button
           variant="tonal"
           size="small"
@@ -80,6 +106,6 @@ export const ContactItem = memo(function ContactItem({ contact, pending, onMakeP
           aria-label={`Eliminar a ${contact.name} de tu red`}
         />
       </div>
-    </li>
+    </motion.li>
   );
 });
