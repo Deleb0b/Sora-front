@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { queryOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '../../../components/feedback';
 import { mutationKeys, queryKeys } from '../../../lib/query';
 import { settingsService } from '../../../services';
@@ -6,12 +6,15 @@ import type { Settings } from '../../../types';
 
 const SETTINGS_KEY = queryKeys.settings.detail();
 
+/** Opciones compartidas: otras vistas (Inicio) las reutilizan con su propio `select`. */
+export const settingsQueryOptions = queryOptions({
+  queryKey: SETTINGS_KEY,
+  queryFn: ({ signal }) => settingsService.get(signal),
+});
+
 /** Ajustes de la alerta. */
 export function useSettings() {
-  return useQuery({
-    queryKey: SETTINGS_KEY,
-    queryFn: ({ signal }) => settingsService.get(signal),
-  });
+  return useQuery(settingsQueryOptions);
 }
 
 /**
