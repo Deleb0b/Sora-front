@@ -9,6 +9,19 @@
   box-sizing: border-box;
 }
 
+/*
+ * Contraste WCAG AA (auditoría con axe): el texto blanco sobre el coral de acción (#E4555D)
+ * da 3.65:1 y AA pide 4.5:1 para texto normal. Se sobrescriben las variables que la biblioteca
+ * expone para temas usando "Coral texto" (#C23B47) del mismo Design System: 5.24:1.
+ * Hover y pressed se oscurecen a partir de ese tono (5.8:1 y 6.6:1).
+ * Pendiente: corregir el token en @sora-app/ui y quitar este bloque.
+ */
+:root {
+  --sora-color-action-primary: #c23b47;
+  --sora-color-action-primary-hover: #b8353f;
+  --sora-color-action-primary-pressed: #a52f3a;
+}
+
 html {
   /* Unidades relativas: respeta el tamaño de texto del sistema y el zoom al 200 %. */
   font-size: 100%;
@@ -111,8 +124,9 @@ main:focus:not(:focus-visible) {
   width: 100%;
   max-width: 40rem;
   margin: 0 auto;
-  /* Espacio para la barra de navegación fija. */
-  padding: var(--sora-space-lg, 16px) var(--sora-space-lg, 16px) calc(96px + env(safe-area-inset-bottom));
+  /* Espacio para la barra fija y para los avisos visibles (lo mide el Toaster). */
+  padding: var(--sora-space-lg, 16px) var(--sora-space-lg, 16px)
+    calc(96px + var(--toaster-space, 0px) + env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   gap: var(--sora-space-xl, 24px);
@@ -280,4 +294,134 @@ main:focus:not(:focus-visible) {
   display: flex;
   flex-direction: column;
   gap: var(--sora-space-xl, 24px);
+}
+
+/* ---------- Inicio ---------- */
+
+.sos-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sora-space-lg, 16px);
+  padding: var(--sora-space-lg, 16px) 0;
+}
+
+.sos-panel__status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sora-space-sm, 8px);
+  min-height: 3rem;
+  text-align: center;
+}
+
+.sos-panel__line {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sora-space-sm, 8px);
+  margin: 0;
+  font-weight: 700;
+}
+
+.network-summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sora-space-md, 12px);
+}
+
+.network-summary__title {
+  margin: 0;
+  font-family: var(--sora-font-heading, inherit);
+  font-size: 1.25rem;
+}
+
+.network-summary__list {
+  display: grid;
+  gap: var(--sora-space-sm, 8px);
+  margin: 0;
+}
+
+.network-summary__list > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--sora-space-md, 12px);
+}
+
+.network-summary__list dt {
+  color: var(--sora-color-text-secondary, #6b6475);
+}
+
+.network-summary__list dd {
+  margin: 0;
+  font-weight: 700;
+  text-align: right;
+}
+
+.network-summary__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sora-space-sm, 8px) var(--sora-space-lg, 16px);
+  margin: 0;
+}
+
+.network-summary a,
+.alert-item a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--sora-color-text-link, #c23b47);
+  font-weight: 700;
+  text-underline-offset: 3px;
+}
+
+/* ---------- Historial ---------- */
+
+.history {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sora-space-xl, 24px);
+}
+
+.alert-item {
+  border-radius: var(--sora-radius-lg, 16px);
+}
+
+.alert-item[aria-busy='true'] {
+  opacity: 0.75;
+}
+
+.alert-item__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sora-space-xs, 4px);
+}
+
+.alert-item__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--sora-space-sm, 8px);
+  flex-wrap: wrap;
+}
+
+.alert-item__date {
+  font-weight: 700;
+}
+
+.alert-item__message,
+.alert-item__meta {
+  margin: 0;
+}
+
+.alert-item__meta {
+  color: var(--sora-color-text-secondary, #6b6475);
+  font-size: 0.9375rem;
+}
+
+.history__footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sora-space-sm, 8px);
 }

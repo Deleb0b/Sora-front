@@ -74,9 +74,9 @@ export const ContactItem = memo(function ContactItem({ contact, pending, onMakeP
             loading={pending}
             disabled={isOptimisticContact(contact)}
             onClick={() => onMakePrimary(contact)}
-            aria-label={`Hacer a ${contact.name} tu contacto principal`}
           >
-            Hacer principal
+            {/* El nombre accesible empieza con el texto visible (WCAG 2.5.3) y añade a quién aplica. */}
+            Hacer principal<span className="sr-only"> a {contact.name}</span>
           </Button>
         )}
 
