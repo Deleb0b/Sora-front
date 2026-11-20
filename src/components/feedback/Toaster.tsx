@@ -1,4 +1,5 @@
 import { Alert, Button, type AlertType } from '@sora-app/ui';
+import { AnimatePresence, motion } from 'motion/react';
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useAnnounce } from '../../a11y';
 
@@ -62,7 +63,11 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       }
 
       const duration = options.duration === undefined ? (isError ? null : 5000) : options.duration;
-      if (duration) timers.current.set(id, setTimeout(() => dismiss(id), duration));
+      if (duration)
+        timers.current.set(
+          id,
+          setTimeout(() => dismiss(id), duration),
+        );
       return id;
     },
     [announce, dismiss],
@@ -87,34 +92,44 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     <ToastContext.Provider value={actions}>
       {children}
       <section className="toaster" aria-label="Notificaciones">
-        {toasts.map((t) => {
-          const isError = t.type === 'error' || t.type === 'warning';
-          return (
-            <Alert
-              key={t.id}
-              type={t.type}
-              title={t.title}
-              message={t.message}
-              // Éxito/info ya se anunció en la región global; evitamos el anuncio doble.
-              role={isError ? 'alert' : undefined}
-              onClose={() => dismiss(t.id)}
-              action={
-                t.action && (
-                  <Button
-                    size="small"
-                    variant="secondary"
-                    onClick={() => {
-                      dismiss(t.id);
-                      t.action?.onClick();
-                    }}
-                  >
-                    {t.action.label}
-                  </Button>
-                )
-              }
-            />
-          );
-        })}
+        <AnimatePresence initial={false}>
+          {toasts.map((t) => {
+            const isError = t.type === 'error' || t.type === 'warning';
+            return (
+              <motion.div
+                key={t.id}
+                layout
+                initial={{ opacity: 0, y: 16, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
+                transition={{ type: 'spring', stiffness: 500, damping: 38 }}
+              >
+                <Alert
+                  type={t.type}
+                  title={t.title}
+                  message={t.message}
+                  // Éxito/info ya se anunció en la región global; evitamos el anuncio doble.
+                  role={isError ? 'alert' : undefined}
+                  onClose={() => dismiss(t.id)}
+                  action={
+                    t.action && (
+                      <Button
+                        size="small"
+                        variant="secondary"
+                        onClick={() => {
+                          dismiss(t.id);
+                          t.action?.onClick();
+                        }}
+                      >
+                        {t.action.label}
+                      </Button>
+                    )
+                  }
+                />
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
       </section>
     </ToastContext.Provider>
   );

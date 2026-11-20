@@ -1,8 +1,10 @@
 import { Text } from '@sora-app/ui';
+import { AnimatePresence } from 'motion/react';
 import { useCallback, useId, useRef, useState } from 'react';
 import { LIMITS } from '../../../config/env';
 import type { Contact } from '../../../types';
 import { useDeleteContact, usePendingContactIds, useUpdateContact } from '../hooks/useContactMutations';
+import { ContactFormDialog } from './ContactFormDialog';
 import { ContactItem } from './ContactItem';
 import { DeleteContactDialog } from './DeleteContactDialog';
 
@@ -17,6 +19,7 @@ export function ContactList({ contacts }: ContactListProps) {
   // así que el foco se lleva aquí para que no se pierda en <body>.
   const headingRef = useRef<HTMLHeadingElement>(null);
   const [toDelete, setToDelete] = useState<Contact | null>(null);
+  const [toEdit, setToEdit] = useState<Contact | null>(null);
 
   const pendingIds = usePendingContactIds();
   const updateContact = useUpdateContact();
@@ -30,6 +33,10 @@ export function ContactList({ contacts }: ContactListProps) {
   const handleMakePrimary = useCallback((contact: Contact) => update({ contact, patch: { isPrimary: true } }), [update]);
 
   const handleRequestDelete = useCallback((contact: Contact) => setToDelete(contact), []);
+
+  const handleEdit = useCallback((contact: Contact) => setToEdit(contact), []);
+
+  const handleCloseEdit = useCallback(() => setToEdit(null), []);
 
   const handleCancelDelete = useCallback(() => setToDelete(null), []);
 
@@ -53,17 +60,22 @@ export function ContactList({ contacts }: ContactListProps) {
       </Text>
 
       <ul className="stack-list contact-list">
-        {contacts.map((contact) => (
-          <ContactItem
-            key={contact.id}
-            contact={contact}
-            pending={pendingIds.has(contact.id)}
-            onMakePrimary={handleMakePrimary}
-            onRequestDelete={handleRequestDelete}
-          />
-        ))}
+        {/* initial={false}: no se anima la carga inicial, solo altas, bajas y reordenamientos. */}
+        <AnimatePresence initial={false}>
+          {contacts.map((contact) => (
+            <ContactItem
+              key={contact.id}
+              contact={contact}
+              pending={pendingIds.has(contact.id)}
+              onMakePrimary={handleMakePrimary}
+              onRequestDelete={handleRequestDelete}
+              onEdit={handleEdit}
+            />
+          ))}
+        </AnimatePresence>
       </ul>
 
+      <ContactFormDialog open={toEdit !== null} contact={toEdit} onClose={handleCloseEdit} />
       <DeleteContactDialog contact={toDelete} onCancel={handleCancelDelete} onConfirm={handleConfirmDelete} />
     </section>
   );

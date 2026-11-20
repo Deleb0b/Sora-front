@@ -54,6 +54,7 @@ Dentro de cada feature: `XPage.tsx`, `hooks/` (useQuery/useMutation), `component
 - Datos del servidor **solo** en TanStack Query (nada de copiarlos a `useState`).
 - Query keys **solo** desde `src/lib/query/queryKeys.ts`.
 - Validación **solo** con los esquemas de `src/schemas`.
+- Formularios: `register` para `Input`; `Controller` para `Select` (no expone `ref`) y para `Switch`/`Checkbox` (la biblioteca siempre les pasa `checked`, así que `register` no fija su valor). Helpers en `src/forms`.
 - Botones de solo ícono: `aria-label` en el botón y `aria-hidden="true"` en el ícono.
 - Avisos: `useToast()` para mensajes visibles, `useAnnounce()` para anuncios solo de lector de pantalla.
 

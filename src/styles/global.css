@@ -213,12 +213,6 @@ main:focus:not(:focus-visible) {
   display: flex;
   flex-direction: column;
   gap: var(--sora-space-sm, 8px);
-  transition: opacity 0.2s ease;
-}
-
-/* Guardando: se atenúa y además lleva texto "Guardando…" (no depende solo del color). */
-.contact-item[data-saving] {
-  opacity: 0.7;
 }
 
 .contact-item__actions {
@@ -233,7 +227,57 @@ main:focus:not(:focus-visible) {
   color: var(--sora-color-text-secondary, #6b6475);
 }
 
-.contact-item__delete {
+.contact-item__edit {
   margin-left: auto;
+}
+
+.contact-item__edit,
+.contact-item__delete {
   padding-inline: var(--sora-space-md, 12px);
+}
+
+/* ---------- Formularios ---------- */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sora-space-lg, 16px);
+}
+
+.form__fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sora-space-lg, 16px);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.form__legend {
+  padding: 0;
+  margin-bottom: var(--sora-space-xs, 4px);
+  font-family: var(--sora-font-heading, inherit);
+  font-weight: 700;
+  font-size: 1.125rem;
+}
+
+.form__required-note,
+.form__hint {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--sora-color-text-secondary, #6b6475);
+}
+
+.form__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--sora-space-sm, 8px);
+  flex-wrap: wrap;
+}
+
+.page-transition {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sora-space-xl, 24px);
 }

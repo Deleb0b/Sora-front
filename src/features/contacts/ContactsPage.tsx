@@ -4,7 +4,7 @@ import { PlusIcon } from '../../components/icons';
 import { EmptyState, QueryState } from '../../components/feedback';
 import { PageHeader } from '../../components/layout';
 import { LIMITS } from '../../config/env';
-import { AddContactDialog } from './components/AddContactDialog';
+import { ContactFormDialog } from './components/ContactFormDialog';
 import { ContactList } from './components/ContactList';
 import { useContacts } from './hooks/useContacts';
 
@@ -58,7 +58,7 @@ export function ContactsPage() {
         {(contacts) => <ContactList contacts={contacts} />}
       </QueryState>
 
-      <AddContactDialog open={adding} onClose={closeAdd} />
+      <ContactFormDialog open={adding} onClose={closeAdd} />
     </>
   );
 }
