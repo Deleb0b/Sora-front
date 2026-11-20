@@ -45,6 +45,9 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   const announce = useAnnounce();
   const nextId = useRef(0);
   const timers = useRef(new Map<number, ReturnType<typeof setTimeout>>());
+  // Medición del contenedor: los errores no se cierran solos, así que reservamos su alto al final
+  // de la página (--toaster-space) para que nunca tapen botones ni el foco (WCAG 2.4.11).
+  const regionRef = useRef<HTMLElement>(null);
 
   const dismiss = useCallback((id: number) => {
     clearTimeout(timers.current.get(id));
@@ -88,10 +91,24 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     return () => map.forEach(clearTimeout);
   }, []);
 
+  useEffect(() => {
+    const el = regionRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const root = document.documentElement;
+    const observer = new ResizeObserver(([entry]) => {
+      root.style.setProperty('--toaster-space', `${Math.ceil(entry.contentRect.height)}px`);
+    });
+    observer.observe(el);
+    return () => {
+      observer.disconnect();
+      root.style.removeProperty('--toaster-space');
+    };
+  }, []);
+
   return (
     <ToastContext.Provider value={actions}>
       {children}
-      <section className="toaster" aria-label="Notificaciones">
+      <section ref={regionRef} className="toaster" aria-label="Notificaciones">
         <AnimatePresence initial={false}>
           {toasts.map((t) => {
             const isError = t.type === 'error' || t.type === 'warning';
