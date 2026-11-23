@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^7.0.7",
-    "@sora-app/ui": "^1.0.0",
+    "@sora-app/ui": "^1.0.1",
     "@tanstack/react-query": "^5.108.0",
     "motion": "^14.14.0",
     "react": "^19.3.1",
