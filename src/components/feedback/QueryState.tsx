@@ -2,6 +2,7 @@ import { Alert, Button, Spinner, Text } from '@sora-app/ui';
 import type { ReactNode } from 'react';
 import { getErrorMessage } from '../../utils/errors';
 import { EmptyState } from './EmptyState';
+import { OfflineNotice } from './OfflineNotice';
 
 /**
  * Pinta los cuatro estados de una vista a partir de lo que devuelve TanStack Query
@@ -19,6 +20,8 @@ interface QueryLike<T> {
   isPending: boolean;
   isError: boolean;
   isFetching: boolean;
+  /** 'paused' = TanStack Query detuvo la petición porque no hay conexión. */
+  fetchStatus?: 'fetching' | 'paused' | 'idle';
   error: unknown;
   refetch: () => unknown;
 }
@@ -40,7 +43,13 @@ export function QueryState<T>({
   loadingLabel = 'Cargando',
   errorTitle = 'No pudimos cargar la información',
 }: QueryStateProps<T>) {
-  const { data, isPending, isError, isFetching, error, refetch } = query;
+  const { data, isPending, isError, isFetching, fetchStatus, error, refetch } = query;
+
+  // Sin conexión y sin datos en caché: en lugar de un spinner infinito, explicar qué pasa.
+  // La consulta se reanuda sola al volver la conexión (refetchOnReconnect).
+  if (isPending && fetchStatus === 'paused') {
+    return <OfflineNotice />;
+  }
 
   if (isPending) {
     return (

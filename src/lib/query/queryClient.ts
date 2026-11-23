@@ -1,4 +1,4 @@
-import { QueryClient } from '@tanstack/react-query';
+import { onlineManager, QueryClient } from '@tanstack/react-query';
 import { ApiError } from '../../services/http';
 
 const MAX_RETRIES = 2;
@@ -36,5 +36,12 @@ export function createQueryClient() {
     },
   });
 }
+
+/**
+ * TanStack Query asume que hay conexión hasta recibir un evento 'offline'. Si la PWA se abre ya
+ * sin internet, le decimos el estado real para que pause las consultas (y la vista muestre
+ * "Sin conexión") en lugar de reintentar peticiones que no pueden salir.
+ */
+if (typeof navigator !== 'undefined') onlineManager.setOnline(navigator.onLine);
 
 export const queryClient = createQueryClient();

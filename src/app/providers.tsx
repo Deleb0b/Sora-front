@@ -4,6 +4,7 @@ import { lazy, Suspense, type ReactNode } from 'react';
 import { LiveAnnouncerProvider } from '../a11y';
 import { ToastProvider } from '../components/feedback';
 import { queryClient } from '../lib/query';
+import { PwaUpdater } from '../pwa/PwaUpdater';
 
 /** Las DevTools solo se cargan en desarrollo (no entran al bundle de producción). */
 const ReactQueryDevtools = import.meta.env.DEV
@@ -17,7 +18,10 @@ export function AppProviders({ children }: { children: ReactNode }) {
           animaciones de posición y transformación en toda la app y conserva solo la opacidad. */}
       <MotionConfig reducedMotion="user">
         <LiveAnnouncerProvider>
-          <ToastProvider>{children}</ToastProvider>
+          <ToastProvider>
+            {children}
+            <PwaUpdater />
+          </ToastProvider>
         </LiveAnnouncerProvider>
       </MotionConfig>
       <Suspense fallback={null}>

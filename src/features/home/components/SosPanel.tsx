@@ -17,7 +17,7 @@ interface SosPanelProps {
  * en un ref: es un valor mutable que no debe provocar renders. Así `handleTrigger` es estable.
  */
 export function SosPanel({ config, contactsCount }: SosPanelProps) {
-  const { mutate, reset, isPending, isSuccess, isError } = useSendAlert();
+  const { mutate, reset, isPending, isPaused, isSuccess, isError } = useSendAlert();
 
   const latest = useRef({ config, contactsCount });
   useEffect(() => {
@@ -50,7 +50,14 @@ export function SosPanel({ config, contactsCount }: SosPanelProps) {
 
       {/* Estado textual (no solo visual) de la alerta. */}
       <div className="sos-panel__status">
-        {isPending && (
+        {isPending && isPaused && (
+          // TanStack Query pausa la mutación sin conexión y la reintenta sola al volver la red.
+          <Text variant="bodyBold">
+            Sin conexión: tu alerta se enviará en cuanto vuelva la señal. Si es urgente, llama al{' '}
+            <a href="tel:911">911</a>.
+          </Text>
+        )}
+        {isPending && !isPaused && (
           <p className="sos-panel__line">
             <Spinner size={16} label="Enviando alerta" /> Enviando tu alerta…
           </p>

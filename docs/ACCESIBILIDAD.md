@@ -7,9 +7,9 @@ Las secciones marcadas con ☐ se completan al hacer las pruebas manuales.
 
 Herramienta: axe-core 4 (reglas WCAG 2.0/2.1/2.2 A y AA + buenas prácticas), Chrome, viewport 390 × 844.
 
-| Vista / estado | Violaciones iniciales | Después de corregir |
+| Vista / estado | Violaciones iniciales | Después de corregir (app + `@sora-app/ui` 1.0.1) |
 |---|---|---|
-| Inicio | 2 (contraste, nombre accesible) | 1 (limitación de la biblioteca, ver §5) |
+| Inicio | 2 (contraste, nombre accesible del SOS) | 0 |
 | Mi red | 2 (contraste, nombre accesible) | 0 |
 | Mi red con el formulario abierto y errores | 2 | 0 |
 | Historial | 0 | 0 |
@@ -18,9 +18,10 @@ Herramienta: axe-core 4 (reglas WCAG 2.0/2.1/2.2 A y AA + buenas prácticas), Ch
 
 Correcciones aplicadas:
 
-- **Contraste del color de acción.** Texto blanco sobre `#E4555D` = 3.65:1 (AA pide 4.5:1). Se sobrescribieron
-  las variables `--sora-color-action-primary*` en `src/styles/global.css` con "Coral texto" `#C23B47` del mismo
-  Design System (5.24:1).
+- **Contraste del color de acción.** Texto blanco sobre `#E4555D` = 3.65:1 (AA pide 4.5:1). Primero se corrigió en la
+  app sobrescribiendo variables; después se corrigió en la biblioteca (`@sora-app/ui` 1.0.1) usando "Coral texto"
+  `#C23B47` del mismo Design System (5.24:1), y se quitó el parche de la app.
+- **Nombre accesible del botón SOS** (WCAG 2.5.3): corregido en `@sora-app/ui` 1.0.1; ahora incluye el texto visible.
 - **Badge "Se comparte" sobre la tarjeta lavanda** = 3.75:1. La tarjeta del resumen pasó a fondo blanco.
 - **"Hacer principal"** tenía un `aria-label` distinto al texto visible (WCAG 2.5.3). Ahora el nombre accesible es
   el texto visible más un complemento oculto: "Hacer principal a Fer López".
@@ -29,14 +30,18 @@ Correcciones aplicadas:
 
 ## 2. Lighthouse
 
-☐ `npm run build && npm run preview`, abrir en Chrome → DevTools → Lighthouse → Accesibilidad y PWA (móvil).
+Build de producción (`npm run build && npm run preview`), Lighthouse 13 en modo móvil, Chrome headless:
 
-| Vista | Accesibilidad | Notas |
-|---|---|---|
-| Inicio | ☐ | |
-| Mi red | ☐ | |
-| Historial | ☐ | |
-| Ajustes | ☐ | |
+| Vista | Rendimiento | Accesibilidad | Buenas prácticas |
+|---|---:|---:|---:|
+| Inicio | 92 | 100 | 100 |
+| Mi red | 91 | 100 | 100 |
+| Historial | 89 | 100 | 100 |
+| Ajustes | 95 | 100 | 100 |
+
+El rendimiento incluye la latencia artificial de la API simulada (400–1100 ms).
+
+☐ Repetir en Chrome → DevTools → Lighthouse y anotar los resultados.
 
 ## 3. Teclado
 
@@ -80,11 +85,6 @@ Verificado con pruebas automatizadas en el navegador (Playwright):
 
 ## 6. Limitaciones conocidas
 
-- **`SOSButton` (biblioteca):** su `aria-label` ("SOS. Mantén presionado 3 segundos…") no incluye el texto visible
-  "Mantén 3 s" (axe: `label-content-name-mismatch`, WCAG 2.5.3). El componente no permite cambiarlo desde la app.
-  Propuesta para `@sora-app/ui`: aceptar `aria-label` o construirlo a partir de `hint`.
-- **Color de acción (biblioteca):** el token `action.primary` no cumple AA con texto blanco; se corrige en la app
-  sobrescribiendo variables. Propuesta: cambiar el token en la biblioteca.
 - **`Switch` de la biblioteca:** siempre es controlado, por lo que se integra con `Controller` en lugar de `register`.
 - **`Input` de la biblioteca:** sobrescribe un `aria-describedby` externo; los textos de ayuda se pasan por `helperText`.
 - La API es simulada en el navegador; los tiempos y errores de red son artificiales.
