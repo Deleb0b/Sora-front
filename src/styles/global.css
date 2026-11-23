@@ -9,19 +9,6 @@
   box-sizing: border-box;
 }
 
-/*
- * Contraste WCAG AA (auditoría con axe): el texto blanco sobre el coral de acción (#E4555D)
- * da 3.65:1 y AA pide 4.5:1 para texto normal. Se sobrescriben las variables que la biblioteca
- * expone para temas usando "Coral texto" (#C23B47) del mismo Design System: 5.24:1.
- * Hover y pressed se oscurecen a partir de ese tono (5.8:1 y 6.6:1).
- * Pendiente: corregir el token en @sora-app/ui y quitar este bloque.
- */
-:root {
-  --sora-color-action-primary: #c23b47;
-  --sora-color-action-primary-hover: #b8353f;
-  --sora-color-action-primary-pressed: #a52f3a;
-}
-
 html {
   /* Unidades relativas: respeta el tamaño de texto del sistema y el zoom al 200 %. */
   font-size: 100%;
