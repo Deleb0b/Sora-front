@@ -2,13 +2,23 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Sora: app de emergencia para mujeres. Envía una alerta a tu red de confianza." />
-    <meta name="theme-color" content="#E4555D" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Sora</title>
+    <meta name="description" content="Sora: app de emergencia para mujeres. Envía una alerta a tu red de confianza." />
+
+    <!-- Tema y experiencia móvil -->
+    <meta name="theme-color" content="#C23B47" />
+    <meta name="color-scheme" content="light" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Sora" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon-180x180.png" />
   </head>
   <body>
+    <noscript>Sora necesita JavaScript. Si estás en peligro, llama al 911.</noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
