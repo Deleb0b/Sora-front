@@ -24,7 +24,7 @@ export function DeleteContactDialog({ contact, onCancel, onConfirm }: DeleteCont
       description="Ya no recibirá tus alertas de emergencia."
       footer={
         <>
-          <Button variant="secondary" onClick={onCancel}>
+          <Button variant="tonal" onClick={onCancel}>
             Cancelar
           </Button>
           <Button variant="primary" onClick={() => contact && onConfirm(contact)}>

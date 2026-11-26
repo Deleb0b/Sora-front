@@ -114,7 +114,7 @@ export function ContactForm({ defaultValues, onSubmit, onCancel, isPending, subm
       <FormError message={errors.root?.server?.message} />
 
       <div className="form__actions">
-        <Button type="button" variant="secondary" onClick={onCancel} disabled={isPending}>
+        <Button type="button" variant="tonal" onClick={onCancel} disabled={isPending}>
           Cancelar
         </Button>
         <Button type="submit" loading={isPending}>

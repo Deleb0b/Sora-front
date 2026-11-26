@@ -160,7 +160,7 @@ export function SettingsForm({ settings, onSubmit, isPending }: SettingsFormProp
       <FormError message={errors.root?.server?.message} />
 
       <div className="form__actions">
-        <Button type="button" variant="secondary" onClick={() => reset()} disabled={!isDirty || isPending}>
+        <Button type="button" variant="tonal" onClick={() => reset()} disabled={!isDirty || isPending}>
           Descartar cambios
         </Button>
         <Button type="submit" loading={isPending} disabled={!isDirty}>

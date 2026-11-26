@@ -12,7 +12,7 @@ export function NotFoundPage() {
       <EmptyState
         title="Esta página no existe"
         description="Puede que el enlace esté mal escrito."
-        action={<Button onClick={() => navigate(ROUTES.home)}>Volver a Inicio</Button>}
+        action={<Button variant="secondary" onClick={() => navigate(ROUTES.home)}>Volver a Inicio</Button>}
       />
     </>
   );
