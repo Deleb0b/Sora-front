@@ -412,3 +412,72 @@ main:focus:not(:focus-visible) {
   align-items: center;
   gap: var(--sora-space-sm, 8px);
 }
+
+/* ---------- Identidad: estado «Alerta enviada» (combinación Nocturna del manual) ---------- */
+
+.sos-panel[data-sent] {
+  /* Variables de la biblioteca redefinidas solo dentro del panel: el anillo de foco pasa a Durazno,
+     porque Violeta sobre Ciruela no tiene contraste suficiente (2.8:1, según el manual). */
+  --sora-color-bg-default: var(--sora-palette-ciruela-noche);
+  --sora-color-border-focus: var(--sora-palette-durazno-calma);
+  background: var(--sora-palette-ciruela-noche);
+  color: var(--sora-palette-durazno-calma);
+  border-radius: var(--sora-radius-lg, 16px);
+  padding: var(--sora-space-xl, 24px) var(--sora-space-lg, 16px);
+  transition: background-color 0.3s ease;
+}
+
+.sos-panel[data-sent] :where(a, button):focus-visible {
+  outline-color: var(--sora-palette-durazno-calma);
+}
+
+.sos-panel__sent-title {
+  margin: 0;
+  font-family: var(--sora-font-heading, inherit);
+  font-weight: 800;
+  font-size: 1.75rem;
+  line-height: 1.2;
+}
+
+.sos-panel__sent-text {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.sos-panel__sent-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sora-space-sm, 8px);
+  width: min(20rem, 100%);
+  margin-top: var(--sora-space-md, 12px);
+}
+
+/* Verde Refugio con texto blanco: 5.4:1. Se reasignan las variables del botón secundario. */
+.sos-panel__safe {
+  --sora-color-action-secondary: var(--sora-palette-verde-refugio);
+  --sora-color-action-secondary-hover: #1d6650;
+  --sora-color-action-secondary-pressed: #175443;
+  width: 100%;
+}
+
+.sos-panel__call {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  border: 2px solid var(--sora-palette-durazno-calma);
+  border-radius: var(--sora-radius-full, 999px);
+  color: var(--sora-palette-durazno-calma);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.sos-panel__call:active {
+  background: rgba(255, 243, 236, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sos-panel[data-sent] {
+    transition: none;
+  }
+}

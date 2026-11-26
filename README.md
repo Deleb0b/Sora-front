@@ -59,6 +59,18 @@ soraMock.reset()             // restablece los datos de demostración
   contraste del color de acción y nombre accesible del `SOSButton`. Otros detalles de integración (por ejemplo,
   `Switch` siempre controlado) están en [CONTRIBUTING.md](./CONTRIBUTING.md).
 
+### Identidad visual (Manual de Identidad Sora)
+
+- **Logotipo horizontal** en la esquina superior izquierda del encabezado (`src/components/brand/SoraLogo.tsx`),
+  construido con la retícula del manual: símbolo de 12x, separación de 3x y «sora» en Nunito ExtraBold a 9.4x;
+  ancho mínimo de 100 px.
+- **Ícono de la app** = símbolo C del manual (`public/icons`).
+- **Color con significado:** Coral Sora solo en el botón SOS; Coral Texto en las acciones principales de formularios y
+  en confirmar una eliminación; Violeta Voz en acciones secundarias («Agregar contacto», «Hacer principal»,
+  interruptores); Lavanda en «Cancelar»; Malva y Coral en avatares; Verde Refugio en «Estoy a salvo».
+- **Alerta enviada:** el panel cambia a la combinación Nocturna (fondo Ciruela, texto Durazno) con «Estoy a salvo» y
+  «Llamar al 911», como en la maqueta del manual.
+
 ## 2. Estado del servidor con TanStack Query
 
 - `QueryClientProvider` en la raíz (`src/app/providers.tsx`) y DevTools solo en desarrollo (no entran al build).

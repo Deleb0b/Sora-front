@@ -21,7 +21,10 @@ export function ContactsPage() {
   const closeAdd = useCallback(() => setAdding(false), []);
 
   const addButton = (
+    // Violeta Voz: el manual reserva el coral para la acción más importante (el SOS) y pone
+    // acciones de la red como «Invitar a mi red» en el color de acción secundaria.
     <Button
+      variant="secondary"
       icon={<PlusIcon size={20} />}
       onClick={openAdd}
       disabled={contactsQuery.isPending || atLimit}
@@ -51,7 +54,11 @@ export function ContactsPage() {
             icon={<PeopleIcon size={40} />}
             title="Tu red está vacía"
             description="Agrega al menos una persona de confianza para que reciba tu alerta."
-            action={<Button onClick={openAdd}>Agregar mi primer contacto</Button>}
+            action={
+              <Button variant="secondary" onClick={openAdd}>
+                Agregar mi primer contacto
+              </Button>
+            }
           />
         }
       >

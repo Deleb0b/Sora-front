@@ -15,6 +15,7 @@ Herramienta: axe-core 4 (reglas WCAG 2.0/2.1/2.2 A y AA + buenas prácticas), Ch
 | Historial | 0 | 0 |
 | Ajustes | 0 | 0 |
 | Página no encontrada | 1 (contraste) | 0 |
+| Inicio con la alerta enviada (panel Ciruela, v1.0.2) | — | 0 |
 
 Correcciones aplicadas:
 

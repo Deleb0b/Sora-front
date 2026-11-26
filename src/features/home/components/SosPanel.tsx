@@ -15,11 +15,16 @@ interface SosPanelProps {
  * terminar la cuenta (3 s después). Para que en ese momento use los datos más recientes
  * (por si se refrescaron los ajustes o la red mientras se mantenía presionado), se guardan
  * en un ref: es un valor mutable que no debe provocar renders. Así `handleTrigger` es estable.
+ *
+ * Al enviarse la alerta, el panel cambia a la combinación «Nocturna» del Manual de Identidad
+ * (fondo Ciruela, texto Durazno), con «Estoy a salvo» en Verde Refugio y «Llamar al 911».
  */
 export function SosPanel({ config, contactsCount }: SosPanelProps) {
-  const { mutate, reset, isPending, isPaused, isSuccess, isError } = useSendAlert();
+  const { mutate, reset, data, isPending, isPaused, isSuccess, isError } = useSendAlert();
 
   const latest = useRef({ config, contactsCount });
+  // Al pulsar «Estoy a salvo» el botón desaparece: el foco vuelve al SOS para no perderse en <body>.
+  const panelRef = useRef<HTMLElement>(null);
   useEffect(() => {
     latest.current = { config, contactsCount };
   }, [config, contactsCount]);
@@ -29,11 +34,22 @@ export function SosPanel({ config, contactsCount }: SosPanelProps) {
     mutate({ message: c.message, shareLocation: c.shareLocation, contactsCount: n });
   }, [mutate]);
 
+  const handleSafe = useCallback(() => {
+    reset();
+    requestAnimationFrame(() => panelRef.current?.querySelector<HTMLElement>('.sora-sos')?.focus());
+  }, [reset]);
+
   const seconds = Math.round(config.holdDuration / 1000);
   const noContacts = contactsCount === 0;
 
   return (
-    <section className="sos-panel" aria-labelledby="sos-title" aria-busy={isPending || undefined}>
+    <section
+      ref={panelRef}
+      className="sos-panel"
+      aria-labelledby="sos-title"
+      aria-busy={isPending || undefined}
+      data-sent={isSuccess || undefined}
+    >
       <h2 id="sos-title" className="sr-only">
         Botón de emergencia
       </h2>
@@ -64,12 +80,20 @@ export function SosPanel({ config, contactsCount }: SosPanelProps) {
         )}
         {isSuccess && (
           <>
-            <Text color="success" variant="bodyBold">
-              Tu red ya fue avisada.
-            </Text>
-            <Button variant="secondary" size="small" className="touch-target" onClick={reset}>
-              Ya estoy bien
-            </Button>
+            <p className="sos-panel__sent-title">Tu red ya fue avisada</p>
+            <p className="sos-panel__sent-text">
+              {data && describeSent(data.contactsNotified, Boolean(data.location))}
+            </p>
+            <div className="sos-panel__sent-actions">
+              {/* Verde Refugio (paleta funcional): «Estoy a salvo». Solo cierra este aviso en la app. */}
+              <Button variant="secondary" className="sos-panel__safe" onClick={handleSafe}>
+                Estoy a salvo
+              </Button>
+              {/* Es navegación (abre el marcador), por eso es un enlace y no un botón. */}
+              <a className="sos-panel__call" href="tel:911">
+                Llamar al 911
+              </a>
+            </div>
           </>
         )}
         {isError && <Text color="error">No se envió. Puedes volver a intentarlo.</Text>}
@@ -83,4 +107,9 @@ export function SosPanel({ config, contactsCount }: SosPanelProps) {
       </div>
     </section>
   );
+}
+
+function describeSent(contacts: number, withLocation: boolean) {
+  const people = contacts === 1 ? '1 contacto' : `${contacts} contactos`;
+  return withLocation ? `Avisamos a ${people} y compartimos tu ubicación.` : `Avisamos a ${people}.`;
 }
